@@ -9,6 +9,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { formatTime } from "@/lib/utils";
 
 export function SaveGame({ gameData }) {
     // selectedPoints,
@@ -54,7 +55,7 @@ export function SaveGame({ gameData }) {
                     </p>
                     <p>
                         <strong>⏱️ Tempo:</strong>{" "}
-                        {gameData.timeElapsed || (
+                        {formatTime(gameData.timeElapsed) || (
                             <span className="ml-1 text-zinc-500">
                                 Sem informações
                             </span>

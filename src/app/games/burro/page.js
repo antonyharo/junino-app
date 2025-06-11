@@ -1,55 +1,103 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import Link from "next/link"
-import Timer from "@/components/timer"
-
-import { ArrowLeft } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Link from "next/link";
+import Timer from "@/components/timer";
+import { ArrowLeft } from "lucide-react";
+import { SaveGame } from "@/components/save-game";
 
 export default function Burro() {
-    const [selectedPoints, setSelectedPoints] = useState(null)
+    const [playerName, setPlayerName] = useState("");
+    const [playerContact, setPlayerContact] = useState("");
+    const [timeElapsed, setTimeElapsed] = useState(0); // em milissegundos
+    const [selectedPoints, setSelectedPoints] = useState(null);
 
     const pointOptions = [
-        { value: 30, label: "30 Pontos ⭐" },
-        { value: 70, label: "70 Pontos ⭐⭐" },
-        { value: 100, label: "100 Pontos ⭐⭐⭐" },
-    ]
+        { value: 30, label: "30 pontos ⭐" },
+        { value: 70, label: "70 pontos ⭐⭐" },
+        { value: 100, label: "100 pontos ⭐⭐⭐" },
+    ];
 
     return (
-        <>
-            <Link href={"/"} className="flex gap-2 items-center text-zinc-400 transition duration-200 hover:text-zinc-600"><ArrowLeft size={14} /> Voltar a página inicial</Link>
+        <div className="max-w-xl mx-auto px-4 py-6 space-y-6">
+            <Link
+                href="/"
+                className="flex gap-2 items-center text-zinc-500 hover:text-zinc-700 transition"
+            >
+                <ArrowLeft size={16} />
+                <span>Voltar à página inicial</span>
+            </Link>
 
-            <h1 className="text-2xl font-bold">Novo jogo do burro 🐴</h1>
+            <h1 className="text-3xl font-bold text-zinc-800">
+                Novo jogo do burro 🐴
+            </h1>
 
             <form className="grid gap-4">
                 <div className="grid gap-2">
-                    <Label>👤 Nome do jogador:</Label>
-                    <Input type="text" placeholder="ex: Joazinho 3a" />
+                    <Label htmlFor="playerName">👤 Nome do jogador:</Label>
+                    <Input
+                        id="playerName"
+                        type="text"
+                        placeholder="ex: Joazinho 3a"
+                        value={playerName}
+                        onChange={(e) => setPlayerName(e.target.value)}
+                    />
                 </div>
 
                 <div className="grid gap-2">
-                    <Label>📞 Contato do jogador:</Label>
-                    <Input type="text" placeholder="ex: Telefone ou Email" />
+                    <Label htmlFor="playerContact">
+                        📞 Contato do jogador:
+                    </Label>
+                    <Input
+                        id="playerContact"
+                        type="text"
+                        placeholder="ex: Telefone ou Email"
+                        value={playerContact}
+                        onChange={(e) => setPlayerContact(e.target.value)}
+                    />
                 </div>
             </form>
 
-            <Timer limitMs={30000} />
-
-            <div className="grid gap-2 mt-4">
-                {pointOptions.map((option) => (
-                    <Button
-                        key={option.value}
-                        variant="outline"
-                        onClick={() => setSelectedPoints(option.value)}
-                        className={selectedPoints === option.value ? "border-green-500" : ""}
-                    >
-                        {option.label}
-                    </Button>
-                ))}
+            <div className="mt-4">
+                <Timer
+                    timeElapsed={timeElapsed}
+                    setTimeElapsed={setTimeElapsed}
+                />
             </div>
-        </>
-    )
+
+            <div className="grid gap-2 mt-6">
+                <Label>Pontuação:</Label>
+                <div className="flex flex-wrap gap-2">
+                    {pointOptions.map((option) => (
+                        <Button
+                            key={option.value}
+                            className={`${
+                                selectedPoints === option.value
+                                    ? "border-green-400"
+                                    : ""
+                            }`}
+                            variant={"outline"}
+                            onClick={() => setSelectedPoints(option.value)}
+                        >
+                            {option.label}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="pt-6">
+                <SaveGame
+                    gameData={{
+                        selectedPoints,
+                        timeElapsed,
+                        playerName,
+                        playerContact,
+                    }}
+                />
+            </div>
+        </div>
+    );
 }
