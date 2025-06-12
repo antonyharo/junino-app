@@ -10,10 +10,10 @@ import { ArrowLeft } from "lucide-react";
 import { SaveGame } from "@/components/save-game";
 
 export default function Burro() {
-    const [playerName, setPlayerName] = useState("");
-    const [playerContact, setPlayerContact] = useState("");
-    const [timeElapsed, setTimeElapsed] = useState(0); // em milissegundos
-    const [selectedPoints, setSelectedPoints] = useState(null);
+    const [username, setUsername] = useState("");
+    const [contact, setContact] = useState("");
+    const [durationMs, setDurationMs] = useState(0); // em milissegundos
+    const [points, setPoints] = useState(null);
 
     const pointOptions = [
         { value: 1, label: "1 acerto ⭐" },
@@ -39,35 +39,30 @@ export default function Burro() {
 
             <form className="grid gap-4">
                 <div className="grid gap-2">
-                    <Label htmlFor="playerName">👤 Nome do jogador:</Label>
+                    <Label htmlFor="username">👤 Nome do jogador:</Label>
                     <Input
-                        id="playerName"
+                        id="username"
                         type="text"
                         placeholder="ex: Joazinho 3a"
-                        value={playerName}
-                        onChange={(e) => setPlayerName(e.target.value)}
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="playerContact">
-                        📞 Contato do jogador:
-                    </Label>
+                    <Label htmlFor="contact">📞 Contato do jogador:</Label>
                     <Input
-                        id="playerContact"
+                        id="contact"
                         type="text"
                         placeholder="ex: Telefone ou Email"
-                        value={playerContact}
-                        onChange={(e) => setPlayerContact(e.target.value)}
+                        value={contact}
+                        onChange={(e) => setContact(e.target.value)}
                     />
                 </div>
             </form>
 
             <div className="mt-4">
-                <Timer
-                    timeElapsed={timeElapsed}
-                    setTimeElapsed={setTimeElapsed}
-                />
+                <Timer durationMs={durationMs} setDurationMs={setDurationMs} />
             </div>
 
             <div className="grid gap-2 mt-6">
@@ -77,12 +72,12 @@ export default function Burro() {
                         <Button
                             key={option.value}
                             className={`${
-                                selectedPoints === option.value
+                                points === option.value
                                     ? "border-green-400"
                                     : ""
                             }`}
                             variant={"outline"}
-                            onClick={() => setSelectedPoints(option.value)}
+                            onClick={() => setPoints(option.value)}
                         >
                             {option.label}
                         </Button>
@@ -92,12 +87,11 @@ export default function Burro() {
 
             <div className="pt-6">
                 <SaveGame
-                    gameData={{
-                        selectedPoints,
-                        timeElapsed,
-                        playerName,
-                        playerContact,
-                    }}
+                    points={points}
+                    durationMs={durationMs}
+                    username={username}
+                    contact={contact}
+                    game="palhaco"
                 />
             </div>
         </div>
