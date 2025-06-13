@@ -1,16 +1,7 @@
 // /app/api/recent-games/route.ts
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import { formatDateTime } from "@/lib/utils";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-    throw new Error("Supabase environment variables are not set.");
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabaseClient } from "@/lib/supabase";
+import { formatTime } from "@/lib/utils";
 
 // Função para lidar com GET e aplicar paginação
 export async function GET(req) {
@@ -22,6 +13,8 @@ export async function GET(req) {
 
         const from = (page - 1) * limit;
         const to = from + limit - 1;
+
+        const supabase = await supabaseClient();
 
         // Busca paginada
         const { data, error, count } = await supabase
@@ -42,7 +35,7 @@ export async function GET(req) {
         const formattedData =
             data?.map((item) => ({
                 ...item,
-                created_at: formatDateTime(item.created_at), // Formata a data
+                created_at: formatTime(item.created_at), // Formata a data
             })) || [];
 
         return NextResponse.json(

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { formatDateTime } from "@/lib/utils";
+import { formatTime } from "@/lib/utils";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -36,7 +36,7 @@ export async function GET(req) {
         const formattedData =
             data?.map((item) => ({
                 ...item,
-                created_at: formatDateTime(item.created_at),
+                created_at: formatTime(item.created_at),
                 // Convert duration from ms to seconds if needed
                 duration: item.duration_ms
                     ? (item.duration_ms / 1000).toFixed(2)
