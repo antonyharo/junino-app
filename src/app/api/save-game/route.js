@@ -7,6 +7,7 @@ export async function POST(req) {
             await req.json();
 
         if (!username || !game || !durationMs || !points) {
+            console.log("Todos os parâmetros são obrigatórios");
             return NextResponse.json(
                 {
                     error: "Todos os parâmetros são obrigatórios",

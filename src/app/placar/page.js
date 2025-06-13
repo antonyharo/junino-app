@@ -66,13 +66,13 @@ export default function Page() {
             <main className="grid gap-8">
                 <Link
                     href="/"
-                    className="flex gap-2 items-center justify-center text-zinc-500 hover:text-zinc-700 transition"
+                    className="flex gap-2 items-center text-zinc-500 hover:text-zinc-700 transition"
                 >
                     <ArrowLeft size={16} />
                     <span>Voltar à página inicial</span>
                 </Link>
 
-                <h1 className="text-3xl font-bold text-center">🏆 Placar 🏆</h1>
+                <h1 className="text-3xl font-bold">🏆 Placar</h1>
 
                 {/* Erro */}
                 {error && (
@@ -102,7 +102,9 @@ export default function Page() {
                     </section>
                 )}
 
-                <hr className="w-3/4" />
+                <div className="w-full flex justify-center">
+                    <hr className="w-3/4" />
+                </div>
 
                 {/* Lista completa */}
                 {loading ? (

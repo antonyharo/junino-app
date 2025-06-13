@@ -1,27 +1,32 @@
-// /app/api/recent-games/route.ts
 import { NextResponse } from "next/server";
 import { supabaseClient } from "@/lib/supabase";
 import { formatDateTime } from "@/lib/utils";
 
-// Função para lidar com GET e aplicar paginação
 export async function GET(req) {
     try {
-        // Lê os parâmetros de URL
         const { searchParams } = new URL(req.url);
+
         const page = parseInt(searchParams.get("page") || "1");
         const limit = parseInt(searchParams.get("limit") || "12");
+        const search = searchParams.get("search") || "";
 
         const from = (page - 1) * limit;
         const to = from + limit - 1;
 
         const supabase = await supabaseClient();
 
-        // Busca paginada
-        const { data, error, count } = await supabase
+        let query = supabase
             .from("game_history")
             .select("*", { count: "exact" })
-            .order("created_at", { ascending: false })
-            .range(from, to);
+            .order("created_at", { ascending: false });
+
+        if (search) {
+            query = query.or(
+                `username.ilike.%${search}%,contact.ilike.%${search}%`
+            );
+        }
+
+        const { data, error, count } = await query.range(from, to);
 
         if (error) {
             console.error("Erro Supabase:", error.message);
@@ -31,11 +36,10 @@ export async function GET(req) {
             );
         }
 
-        // Formata os dados, incluindo a conversão de datas
         const formattedData =
             data?.map((item) => ({
                 ...item,
-                created_at: formatDateTime(item.created_at), // Formata a data
+                created_at: formatDateTime(item.created_at),
             })) || [];
 
         return NextResponse.json(

@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
 
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import SkeletonCard from "@/components/skeleton-card";
 import GameCard from "@/components/game-card";
@@ -13,47 +13,55 @@ export default function Page() {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isSearching, setIsSearching] = useState(false);
+
     const LIMIT = 9;
 
     useEffect(() => {
-        const getInitialData = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-
-                await fetchGames(1);
-            } catch (err) {
-                console.error(err);
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         getInitialData();
     }, []);
 
-    const fetchGames = async (page) => {
+    const getInitialData = async () => {
+        setPage(1);
+        setRecentGames([]);
+        setHasMore(true);
+        setIsSearching(false);
+        await fetchGames(1);
+    };
+
+    const fetchGames = async (pageNumber, search = "") => {
         try {
-            setLoadingMore(true);
+            if (pageNumber === 1) setLoading(true);
+            else setLoadingMore(true);
+
             setError(null);
 
-            const res = await fetch(
-                `/api/recent-games?page=${page}&limit=${LIMIT}`
-            );
-            if (!res.ok) throw new Error("Failed to fetch recent games");
+            const params = new URLSearchParams({
+                page: pageNumber.toString(),
+                limit: LIMIT.toString(),
+            });
+
+            if (search) params.append("search", search);
+
+            const res = await fetch(`/api/recent-games?${params.toString()}`);
+
+            if (!res.ok) throw new Error("Erro ao buscar partidas");
 
             const responseData = await res.json();
 
-            if (responseData.data.length < LIMIT) {
-                setHasMore(false);
-            }
+            if (responseData.data.length < LIMIT) setHasMore(false);
 
-            setRecentGames((prev) => [...prev, ...responseData.data]);
+            setRecentGames((prev) =>
+                pageNumber === 1
+                    ? responseData.data
+                    : [...prev, ...responseData.data]
+            );
         } catch (err) {
             console.error(err);
             setError(err.message);
         } finally {
+            setLoading(false);
             setLoadingMore(false);
         }
     };
@@ -61,7 +69,20 @@ export default function Page() {
     const handleLoadMore = () => {
         const nextPage = page + 1;
         setPage(nextPage);
-        fetchGames(nextPage);
+        fetchGames(nextPage, isSearching ? searchTerm : "");
+    };
+
+    const handleSearch = () => {
+        setPage(1);
+        setHasMore(true);
+        setIsSearching(true);
+        setRecentGames([]);
+        fetchGames(1, searchTerm);
+    };
+
+    const handleClearSearch = () => {
+        setSearchTerm("");
+        getInitialData();
     };
 
     return (
@@ -70,28 +91,49 @@ export default function Page() {
                 <h1 className="text-3xl font-bold text-center">
                     🎉 Festa Junina do 3a! 🎉
                 </h1>
+
                 <div className="grid gap-3 place-items-center">
                     <Link href="/games/palhaco">
                         <Button variant="outline">
                             Novo jogo do Palhaço 🤡
                         </Button>
                     </Link>
-
                     <Link href="/games/burro">
                         <Button variant="outline">Novo jogo do Burro 🐴</Button>
                     </Link>
-
                     <Link href="/placar">
                         <Button variant="outline">Ver Placar 🏆</Button>
                     </Link>
                 </div>
 
-                {/* Mensagem de erro */}
-                {error && <div className="text-red-500">Error: {error}</div>}
+                {error && <div className="text-red-500">Erro: {error}</div>}
 
-                <h1 className="text-2xl font-bold text-center flex items-center gap-2 justify-center">
+                <h2 className="text-2xl font-bold text-center">
                     📅 Partidas Recentes
-                </h1>
+                </h2>
+
+                {/* Busca */}
+                <div className="flex gap-2 items-center justify-center">
+                    <input
+                        type="text"
+                        placeholder="Pesquisar por nome ou contato..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="border px-3 py-2 rounded-md w-64"
+                    />
+                    <Button
+                        // variant="outline"
+                        onClick={handleSearch}
+                        disabled={!searchTerm}
+                    >
+                        Pesquisar
+                    </Button>
+                    {isSearching && (
+                        <Button variant="ghost" onClick={handleClearSearch}>
+                            Limpar
+                        </Button>
+                    )}
+                </div>
 
                 {loading && (
                     <section className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
@@ -101,7 +143,13 @@ export default function Page() {
                     </section>
                 )}
 
-                {recentGames && (
+                {!loading && recentGames.length === 0 && (
+                    <div className="text-center">
+                        Nenhum resultado encontrado.
+                    </div>
+                )}
+
+                {recentGames.length > 0 && (
                     <section className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
                         {recentGames.map((game) => (
                             <GameCard key={game.id} game={game} />

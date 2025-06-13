@@ -38,12 +38,13 @@ export default function Burro() {
             <form className="grid gap-4">
                 <div className="grid gap-2">
                     <Label htmlFor="username">
-                        <User size={16} /> Nome do jogador:
+                        <User size={16} /> Nome do jogador (observe o exemplo
+                        para fazer registros padronizados):
                     </Label>
                     <Input
                         id="username"
                         type="text"
-                        placeholder="ex: Joazinho 3a"
+                        placeholder="ex: joao santos 3a"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
