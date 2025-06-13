@@ -69,26 +69,26 @@ export default function Page() {
     return (
         <div className="grid items-center justify-items-center min-h-screen p-15">
             <main className="grid gap-8">
-                <h1 className="text-2xl font-bold text-center">
-                    Festa Junina do 3a! 🎉🥳
+                <h1 className="text-3xl font-bold text-center">
+                    🎉 Festa Junina do 3a! 🎉
                 </h1>
                 <div className="grid gap-3 place-items-center">
                     <Link href="/games/palhaco">
                         <Button variant="outline">
-                            Novo jogo do palhaço 🤡
+                            Novo jogo do Palhaço 🤡
                         </Button>
                     </Link>
 
                     <Link href="/games/burro">
-                        <Button variant="outline">Novo jogo do burro 🐴</Button>
+                        <Button variant="outline">Novo jogo do Burro 🐴</Button>
                     </Link>
                 </div>
 
                 {/* Mensagem de erro */}
                 {error && <div className="text-red-500">Error: {error}</div>}
 
-                <h1 className="flex items-center gap-3 text-2xl font-semibold">
-                    <Calendar /> Partidas Recentes
+                <h1 className="text-2xl font-bold text-center flex items-center gap-2 justify-center">
+                    📅 Partidas Recentes
                 </h1>
 
                 {loading && (

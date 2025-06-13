@@ -13,8 +13,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { Loader2, CirclePlus, Mail, Timer, User } from "lucide-react";
 import { formatTime } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
 
 export function SaveGame({ points, durationMs, username, contact, game }) {
     const [loading, setLoading] = useState(false);
@@ -70,7 +70,9 @@ export function SaveGame({ points, durationMs, username, contact, game }) {
 
                 <div className="grid gap-4">
                     <p>
-                        <strong>👤 Nome:</strong>{" "}
+                        <strong className="flex items-center gap-2">
+                            <User size={16} /> Nome:
+                        </strong>{" "}
                         {username || (
                             <span className="ml-1 text-zinc-500">
                                 Sem informações
@@ -78,7 +80,9 @@ export function SaveGame({ points, durationMs, username, contact, game }) {
                         )}
                     </p>
                     <p>
-                        <strong>📞 Contato:</strong>{" "}
+                        <strong className="flex items-center gap-2">
+                            <Mail size={16} /> Contato:
+                        </strong>{" "}
                         {contact || (
                             <span className="ml-1 text-zinc-500">
                                 Sem informações
@@ -86,7 +90,9 @@ export function SaveGame({ points, durationMs, username, contact, game }) {
                         )}
                     </p>
                     <p>
-                        <strong>⭐ Pontuação:</strong>{" "}
+                        <strong className="flex items-center gap-2">
+                            <CirclePlus size={16} /> Pontuação:
+                        </strong>{" "}
                         {points ?? (
                             <span className="ml-1 text-zinc-500">
                                 Sem informações
@@ -94,7 +100,9 @@ export function SaveGame({ points, durationMs, username, contact, game }) {
                         )}
                     </p>
                     <p>
-                        <strong>⏱️ Tempo:</strong>{" "}
+                        <strong className="flex items-center gap-2">
+                            <Timer size={16} /> Tempo:
+                        </strong>{" "}
                         {formatTime(durationMs) || (
                             <span className="ml-1 text-zinc-500">
                                 Sem informações

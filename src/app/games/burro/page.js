@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import Timer from "@/components/timer";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Mail, User } from "lucide-react";
 import { SaveGame } from "@/components/save-game";
 
 export default function Burro() {
@@ -37,7 +37,9 @@ export default function Burro() {
 
             <form className="grid gap-4">
                 <div className="grid gap-2">
-                    <Label htmlFor="username">👤 Nome do jogador:</Label>
+                    <Label htmlFor="username">
+                        <User size={16} /> Nome do jogador:
+                    </Label>
                     <Input
                         id="username"
                         type="text"
@@ -48,7 +50,9 @@ export default function Burro() {
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="contact">📞 Contato do jogador:</Label>
+                    <Label htmlFor="contact">
+                        <Mail size={16} /> Contato do jogador:
+                    </Label>
                     <Input
                         id="contact"
                         type="text"

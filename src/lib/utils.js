@@ -1,5 +1,6 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { format, toZonedTime } from "date-fns-tz";
 
 export function cn(...inputs) {
     return twMerge(clsx(inputs));
@@ -14,4 +15,15 @@ export const formatTime = (ms) => {
         2,
         "0"
     )}:${String(milliseconds).padStart(3, "0")}`;
+};
+
+export const formatDateTime = (dateString) => {
+    const timeZone = "America/Sao_Paulo";
+    const date = new Date(dateString);
+
+    // Converte para o fuso horário especificado
+    const zonedDate = toZonedTime(date, timeZone);
+
+    // Formata no padrão brasileiro
+    return format(zonedDate, "dd/MM/yyyy HH:mm", { timeZone });
 };

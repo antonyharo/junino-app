@@ -1,7 +1,7 @@
 // /app/api/recent-games/route.ts
 import { NextResponse } from "next/server";
 import { supabaseClient } from "@/lib/supabase";
-import { formatTime } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils";
 
 // Função para lidar com GET e aplicar paginação
 export async function GET(req) {
@@ -35,7 +35,7 @@ export async function GET(req) {
         const formattedData =
             data?.map((item) => ({
                 ...item,
-                created_at: formatTime(item.created_at), // Formata a data
+                created_at: formatDateTime(item.created_at), // Formata a data
             })) || [];
 
         return NextResponse.json(

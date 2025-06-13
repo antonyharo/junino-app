@@ -1,4 +1,4 @@
-import { CircleCheck, CircleX, Timer, User } from "lucide-react";
+import { CirclePlus, Mail, Timer, User } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { formatTime } from "@/lib/utils";
 
@@ -12,17 +12,24 @@ export default function GameCard({ game }) {
                     </p>
                 </div>
             </CardHeader>
-            <CardContent className="flex md:flex-wrap items-center justify-between gap-4">
+            <CardContent className="space-y-1">
+                {/* <CardContent className="flex md:flex-wrap items-center justify-between gap-4"> */}
+                <p className="flex items-center gap-2 font-bold">
+                    {game.game === "palhaco" ? "Palhaço 🤡" : "Burro 🐴"}
+                </p>
+                <p className="font-medium flex items-center gap-2 mb-3">
+                    <Timer size={17} />
+                    {formatTime(game.duration_ms)}
+                </p>
                 <p className="flex items-center gap-2">
-                    <User size={20} />
+                    <User size={17} />
                     {game.username || "Visitante"}
                 </p>
-                <p>{game.contact}</p>
-                <p>{game.game}</p>
-                <p>{game.points}</p>
-                <p className="font-bold flex items-center gap-1">
-                    <Timer size={20} />
-                    {formatTime(game.duration_ms)}
+                <p className="flex items-center gap-2">
+                    <Mail size={17} />{game.contact}
+                </p>
+                <p className="flex items-center gap-2">
+                    <CirclePlus size={17} /> Pontos: {game.points}
                 </p>
             </CardContent>
         </Card>
