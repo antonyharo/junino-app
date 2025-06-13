@@ -16,9 +16,9 @@ export default function Burro() {
     const [points, setPoints] = useState(null);
 
     const pointOptions = [
-        { value: 30, label: "30 pontos ⭐" },
-        { value: 70, label: "70 pontos ⭐⭐" },
-        { value: 100, label: "100 pontos ⭐⭐⭐" },
+        { value: 1, label: "1 ponto ⭐" },
+        { value: 2, label: "2 pontos ⭐⭐" },
+        { value: 3, label: "3 pontos ⭐⭐⭐" },
     ];
 
     return (

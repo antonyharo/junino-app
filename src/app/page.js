@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 
-import { Calendar } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import SkeletonCard from "@/components/skeleton-card";
 import GameCard from "@/components/game-card";
@@ -81,6 +79,10 @@ export default function Page() {
 
                     <Link href="/games/burro">
                         <Button variant="outline">Novo jogo do Burro 🐴</Button>
+                    </Link>
+
+                    <Link href="/placar">
+                        <Button variant="outline">Ver Placar 🏆</Button>
                     </Link>
                 </div>
 

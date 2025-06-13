@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { formatDateTime } from "@/lib/utils";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -13,43 +12,68 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function GET(req) {
     try {
-        // Get pagination parameters from URL
         const { searchParams } = new URL(req.url);
-        const page = parseInt(searchParams.get("page") || "1");
-        const limit = parseInt(searchParams.get("limit") || "10");
+        const page = parseInt(searchParams.get("page") || "1", 10);
+        const limit = parseInt(searchParams.get("limit") || "10", 10);
         const offset = (page - 1) * limit;
 
-        // Query with pagination
-        const { data, error, count } = await supabase
+        // Buscar dados da tabela
+        const { data: gameData, error } = await supabase
             .from("game_history")
-            .select("*", { count: "exact" })
-            .eq("result", "win")
-            .order("duration_ms", { ascending: true })
-            .range(offset, offset + limit - 1);
+            .select("username, duration_ms, points");
 
         if (error) {
             console.error("Supabase error:", error.message);
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
 
-        // Format the data including date conversion
-        const formattedData =
-            data?.map((item) => ({
-                ...item,
-                created_at: formatDateTime(item.created_at),
-                // Convert duration from ms to seconds if needed
-                duration: item.duration_ms
-                    ? (item.duration_ms / 1000).toFixed(2)
-                    : null,
-            })) || [];
+        if (!gameData || gameData.length === 0) {
+            return NextResponse.json(
+                { data: [], pagination: {} },
+                { status: 200 }
+            );
+        }
+
+        // Agrupar por usuário (soma dos pontos e do tempo)
+        const userStatsMap = new Map();
+
+        gameData.forEach(({ username, duration_ms, points }) => {
+            if (!username) return;
+
+            if (!userStatsMap.has(username)) {
+                userStatsMap.set(username, {
+                    username,
+                    totalPoints: 0,
+                    totalTime: 0,
+                });
+            }
+
+            const userStats = userStatsMap.get(username);
+            userStats.totalPoints += points || 0;
+            userStats.totalTime += duration_ms || 0;
+        });
+
+        // Converter para array
+        const userStatsArray = Array.from(userStatsMap.values());
+
+        // Ordenar: 1º por pontos DESC, 2º por tempo ASC
+        userStatsArray.sort((a, b) => {
+            if (b.totalPoints !== a.totalPoints) {
+                return b.totalPoints - a.totalPoints; // Maior pontuação primeiro
+            }
+            return a.totalTime - b.totalTime; // Menor tempo primeiro em caso de empate
+        });
+
+        // Paginar
+        const paginatedData = userStatsArray.slice(offset, offset + limit);
 
         return NextResponse.json(
             {
-                data: formattedData,
+                data: paginatedData,
                 pagination: {
                     currentPage: page,
-                    totalItems: count,
-                    totalPages: Math.ceil((count || 0) / limit),
+                    totalItems: userStatsArray.length,
+                    totalPages: Math.ceil(userStatsArray.length / limit),
                     itemsPerPage: limit,
                 },
             },
@@ -58,7 +82,7 @@ export async function GET(req) {
     } catch (err) {
         console.error("Unexpected API error:", err);
         return NextResponse.json(
-            { error: "Unexpected error while fetching data from Supabase." },
+            { error: "Unexpected error while fetching ranking data." },
             { status: 500 }
         );
     }
