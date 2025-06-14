@@ -27,7 +27,7 @@ export default function PlayerCard({ player, variant, position }) {
                 )}
             </CardHeader>
 
-            <CardContent className="flex flex-wrap gap-2">
+            <CardContent className="flex flex-wrap gap-4">
                 <p className="flex items-center gap-1 font-bold">
                     <User size={18} />
                     {player.username || "Anonymous"}
