@@ -57,7 +57,16 @@ export function SaveGame({ points, durationMs, username, contact, game }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>Salvar</Button>
+                <Button disabled={loading}>
+                    {loading ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                            Salvando...
+                        </>
+                    ) : (
+                        <>Salvar</>
+                    )}
+                </Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[425px]">
@@ -118,16 +127,18 @@ export function SaveGame({ points, durationMs, username, contact, game }) {
                         </Button>
                     </DialogClose>
 
-                    <Button onClick={handleSave} disabled={loading}>
-                        {loading ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
-                                Salvando...
-                            </>
-                        ) : (
-                            <>Salvar</>
-                        )}
-                    </Button>
+                    <DialogClose asChild>
+                        <Button onClick={handleSave} disabled={loading}>
+                            {loading ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                                    Salvando...
+                                </>
+                            ) : (
+                                <>Salvar</>
+                            )}
+                        </Button>
+                    </DialogClose>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
