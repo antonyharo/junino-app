@@ -39,9 +39,12 @@ export default function Burro() {
 
             <form className="grid gap-4">
                 <div className="grid gap-2">
-                    <Label htmlFor="username">
-                        <User size={16} /> Nome do jogador (observe o exemplo para fazer registros padronizados):
+                    <Label htmlFor="username" className="text-md">
+                        <User size={16} /> Nome do jogador:
                     </Label>
+                    <p className="text-sm text-muted-foreground mb-2">
+                        (observe o exemplo para fazer registros padronizados)
+                    </p>
                     <Input
                         id="username"
                         type="text"
@@ -52,7 +55,7 @@ export default function Burro() {
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="contact">
+                    <Label htmlFor="contact" className="text-md">
                         <Mail size={16} /> Contato do jogador:
                     </Label>
                     <Input

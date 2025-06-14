@@ -106,6 +106,10 @@ export default function Page() {
                     </Link>
                 </div>
 
+                <div className="w-full flex justify-center">
+                    <hr className="w-2/4" />
+                </div>
+
                 {error && <div className="text-red-500">Erro: {error}</div>}
 
                 <h2 className="text-2xl font-bold text-center">
@@ -113,7 +117,7 @@ export default function Page() {
                 </h2>
 
                 {/* Busca */}
-                <div className="flex gap-2 items-center justify-center">
+                <div className="flex flex-col gap-4 items-center justify-center">
                     <input
                         type="text"
                         placeholder="Pesquisar por nome ou contato..."
@@ -121,18 +125,21 @@ export default function Page() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="border px-3 py-2 rounded-md w-64"
                     />
-                    <Button
-                        // variant="outline"
-                        onClick={handleSearch}
-                        disabled={!searchTerm}
-                    >
-                        Pesquisar
-                    </Button>
-                    {isSearching && (
-                        <Button variant="ghost" onClick={handleClearSearch}>
-                            Limpar
+
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            // variant="outline"
+                            onClick={handleSearch}
+                            disabled={!searchTerm}
+                        >
+                            Pesquisar
                         </Button>
-                    )}
+                        {isSearching && (
+                            <Button variant="ghost" onClick={handleClearSearch}>
+                                Limpar
+                            </Button>
+                        )}
+                    </div>
                 </div>
 
                 {loading && (
